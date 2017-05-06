@@ -24,55 +24,183 @@ TODO:
 // as we can the protytpye or module version
 
 // This is the prototype version
-function PigGame() {
-  this.numPlayers = null
-  this.playerNumber = null
-  this.players = null
-  this.gameActive = null
-  this.playerPanelField = null
-  this.winningScore = 20
-  this.gameScore = null
-  this.roundScore = null
-  this.gameScoreField = null
-  this.roundScoreField = null
-  this.diceImage = null
-  this.diceRoll = null
-  this.previousRoll = null
-  this.mainEventFired = null
-  this.holdOn = null
-}
-PigGame.prototype = {
-  init: function() {
-    var piggame = this
-  },
-  initVars : function() {
-    this.comment('Starting new game!')
-    playerNumber = 0
-    players = [0,0]
-    previousRoll = ''
-    gameScore = [0,0]
-    roundScore = 0
-    // TODO: These are mostly constants, so could be initialized only upon load?
-    playerPanelField = [$('.player-0-panel'), $('.player-1-panel')]
-    gameScoreField = [$('#score-0'), $('#score-1')]
-    gameScoreField[0].text('0'); gameScoreField[1].text('0')
-    roundScoreField = [$('#current-0'), $('#current-1')]
-    roundScoreField[0].text(0)
-    roundScoreField[1].text(0)
-    // debugger
-    diceImage = $('img.dice')
-    diceImage.attr('src', '')
-    gameActive = true  
-    holdOn = false
-    $('div.player-0-panel').removeClass('winner')
-    $('div.player-1-panel').removeClass('winner')
-  },
-  comment : function(text) {
-    $('#commentMe').text(text)
-    console.log('comment: ' + text)
-  }
-}
+// function PigGamePrototype() {
+//   this.numPlayers = null
+//   this.playerNumber = null
+//   this.players = null
+//   this.gameActive = null
+//   this.playerPanelField = null
+//   this.winningScore = 20
+//   this.gameScore = null
+//   this.roundScore = null
+//   this.gameScoreField = null
+//   this.roundScoreField = null
+//   this.diceImage = null
+//   this.diceRoll = null
+//   this.previousRoll = null
+//   this.mainEventFired = null
+//   this.holdOn = null
+// }
+// PigGame.prototype = {
+//   init: function() {
+//     var piggame = this
+//   },
+//   initVars : function() {
+//     this.comment('Starting new game!')
+//     playerNumber = 0
+//     players = [0,0]
+//     previousRoll = ''
+//     gameScore = [0,0]
+//     roundScore = 0
+//     // TODO: These are mostly constants, so could be initialized only upon load?
+//     playerPanelField = [$('.player-0-panel'), $('.player-1-panel')]
+//     gameScoreField = [$('#score-0'), $('#score-1')]
+//     gameScoreField[0].text('0'); gameScoreField[1].text('0')
+//     roundScoreField = [$('#current-0'), $('#current-1')]
+//     roundScoreField[0].text(0)
+//     roundScoreField[1].text(0)
+//     // debugger
+//     diceImage = $('img.dice')
+//     diceImage.attr('src', '')
+//     gameActive = true  
+//     holdOn = false
+//     $('div.player-0-panel').removeClass('winner')
+//     $('div.player-1-panel').removeClass('winner')
+//   },
+//   comment : function(text) {
+//     $('#commentMe').text(text)
+//     console.log('comment: ' + text)
+//   }
+// }
+// End of Prototype pattern
 
+// createObject pattern
+// var PigGameCreateObject = function() {
+//   var PigGame = function() {
+//     var self = {
+//       // component-wide variables
+//   }
+//     self.init = function() {
+//       // initialize any callbacks
+//     }
+//     var doElementOne = function() {
+//       // component method actions
+//     }
+//     // More such component functions
+//     return self
+// }
+// $(function() {
+//   var pigGame = PigGame();
+//   pigGame.init()
+// })
+// End of createObject pattern
+
+// Module pattern
+var PigGame = (() => {
+  // 'class' level, private variables, methods
+  var numPlayers = 0
+  var PigGame = function() {
+    this.numPlayers
+    this.playerNumber
+    this.comment
+    this.players
+    this.gameActive
+    this.playerPanelField
+    this.winningScore = 20
+    this.gameScore
+    this.roundScore
+    this.gameScoreField
+    this.roundScoreField
+    this.diceImage
+    this.diceRoll
+    this.previousRoll
+    this.mainEventFired
+    this.holdOn
+  };
+
+  PigGame.prototype = {
+    init: function() {
+      var self = this;
+      // initialize click actions, etc
+      $(self);
+    },
+
+    comment: (text) => {
+      $('#commentMe').text(text)
+    },
+
+    GameScore: function() {
+      var gameScore = [0,0]
+      return {
+        add: function() { gameScore[playerNumber] += roundScore },
+        clr: function() { gameScore[playerNumber] = 0 },
+        clrAll: function() { gameScore = [0,0] }
+      }
+    },
+    updateScore: function() {
+      // debugger;
+      gameScore[playerNumber] += roundScore
+      gameScoreField[playerNumber].text(gameScore[playerNumber])
+    },
+    gameOver: function(pNbr) {
+      comment("Player #" + pNbr + " WON THE GAME!")
+      $('.player-' + pNbr + '-panel').addClass('winner')
+    },
+    newGame: function() {
+      // debugger;
+      initVars()
+    },
+    nextPlayer: function() {
+      // debugger;
+      roundScore = 0
+      roundScoreField[playerNumber].text(0)
+      playerPanelField[playerNumber].toggleClass('active')
+      playerNumber = (playerNumber + 1) % 2
+      playerPanelField[playerNumber].toggleClass('active')
+      diceImage.attr('src', '')
+    },
+
+    rollEm: function() {
+      if(!gameActive) {
+        return
+      }
+      comment('Rolling the dice')
+      // var diceRoll = Math.floor(Math.random() * 6) + 1
+      var diceRoll = 6
+      comment('Random = ' + diceRoll)
+      // debugger;
+      diceImage.attr('src', 'dice-' + diceRoll + '.png')
+      if(diceRoll == 1) {
+        comment("Rolled a 1; next player's turn")
+        nextPlayer()
+        // debugger;
+      } else if(diceRoll === 6  && previousRoll === playerNumber+'/'+diceRoll) {
+        debugger;
+        gameActive = false
+        gameOver((playerNumber + 1) % 2)
+      } else if(gameScore[playerNumber] + roundScore + diceRoll >= winningScore) {
+        gameActive = false
+        gameOver(playerNumber)
+      } else {
+        // debugger;
+        roundScore += diceRoll
+        debugger;
+        roundScoreField[playerNumber].text(roundScore)
+        previousRoll = playerNumber+'/'+diceRoll
+      }
+    },
+    holdEm: function() {
+      if(!gameActive) {
+        return
+      }
+      // debugger;
+      comment("Hold em...")
+      updateScore()
+      nextPlayer()
+    },
+  };
+  return PigGame;
+})();
 
 // Naive  initialization
 var numPlayers
