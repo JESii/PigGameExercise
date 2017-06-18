@@ -96,36 +96,58 @@ TODO:
 // End of createObject pattern
 
 // Module pattern
-var PigGame = (() => {
+var PigGame = (function() {
+  var numPlayers = 2;
   // 'class' level, private variables, methods
-  var numPlayers = 0
   var PigGame = function() {
-    this.numPlayers
-    this.playerNumber
-    this.comment
-    this.players
-    this.gameActive
-    this.playerPanelField
-    this.winningScore = 20
-    this.gameScore
-    this.roundScore
-    this.gameScoreField
-    this.roundScoreField
-    this.diceImage
-    this.diceRoll
-    this.previousRoll
-    this.mainEventFired
-    this.holdOn
+      // var diceImage = $('img.dice')
+      // var numPlayers =  2;
+      // var playerNumber =  1;
+      // var comment =  null;
+      // var players =  null;
+      // var gameActive =  false;
+      // var playerPanelField =  null;
+      // var winningScore =  20;
+      // var gameScore =  null;
+      // var roundScore =  null;
+      // var gameScoreField =  null;
+      // var roundScoreField =  null;
+      // var diceImage =  $('img.dice');
+      // var diceRoll =  null;
+      // var previousRoll =  null;
+      // var mainEventFired =  null;
+      // var holdOvar =  null;
   };
 
   PigGame.prototype = {
-    init: function() {
+      numPlayers: 2,
+      playerNumber: 1,
+      players: null,
+      gameActive: false,
+      playerPanelField: null,
+      winningScore: 20,
+      gameScore: [0,0],
+      roundScore: null,
+      gameScoreField: [0,0],
+      roundScoreField: [0,0],
+      diceImage: $('img.dice'),
+      diceRoll: null,
+      previousRoll: null,
+      mainEventFired: null,
+      holdOvar: null,
+      playerNumber: 1,
+
+      init: function() {
+      console.log('f(init)');
       var self = this;
-      // initialize click actions, etc
-      $(self);
+
+      console.log('diceImage = ' + this.diceImage);
+      console.log('Preparing f(comment)');
+      self.comment('Starting new game!')
     },
 
     comment: (text) => {
+      console.log('f(comment) - ' + text);
       $('#commentMe').text(text)
     },
 
@@ -137,19 +159,23 @@ var PigGame = (() => {
         clrAll: function() { gameScore = [0,0] }
       }
     },
+
     updateScore: function() {
       // debugger;
       gameScore[playerNumber] += roundScore
       gameScoreField[playerNumber].text(gameScore[playerNumber])
     },
+
     gameOver: function(pNbr) {
-      comment("Player #" + pNbr + " WON THE GAME!")
+      self.comment("Player #" + pNbr + " WON THE GAME!")
       $('.player-' + pNbr + '-panel').addClass('winner')
     },
+
     newGame: function() {
       // debugger;
       initVars()
     },
+
     nextPlayer: function() {
       // debugger;
       roundScore = 0
@@ -161,32 +187,36 @@ var PigGame = (() => {
     },
 
     rollEm: function() {
-      if(!gameActive) {
+      console.log('f(rollEm); gameActive = ' + this.gameActive);
+      if(!this.gameActive) {
         return
       }
-      comment('Rolling the dice')
+      this.comment('Rolling the dice')
       // var diceRoll = Math.floor(Math.random() * 6) + 1
-      var diceRoll = 6
-      comment('Random = ' + diceRoll)
+      this.diceRoll = 6
+      this.comment('Random = ' + this.diceRoll)
       // debugger;
-      diceImage.attr('src', 'dice-' + diceRoll + '.png')
-      if(diceRoll == 1) {
-        comment("Rolled a 1; next player's turn")
-        nextPlayer()
+      console.log('this.diceImage = ' + this.diceImage);
+      // console.log('diceImage = ' + diceImage);
+      this.diceImage.attr('src', 'dice-' + this.diceRoll + '.png')
+      // debugger;
+      if(this.diceRoll == 1) {
+        this.comment("Rolled a 1; next player's turn")
+        this.nextPlayer()
         // debugger;
-      } else if(diceRoll === 6  && previousRoll === playerNumber+'/'+diceRoll) {
-        debugger;
-        gameActive = false
-        gameOver((playerNumber + 1) % 2)
-      } else if(gameScore[playerNumber] + roundScore + diceRoll >= winningScore) {
-        gameActive = false
-        gameOver(playerNumber)
+      } else if(this.diceRoll === 6  && this.previousRoll === this.playerNumber+'/'+this.diceRoll) {
+        // debugger;
+        this.gameActive = false
+        this.gameOver((this.playerNumber + 1) % 2)
+      } else if(this.gameScore[this.playerNumber] + this.roundScore + this.diceRoll >= this.winningScore) {
+        this.gameActive = false
+        this.gameOver(this.playerNumber)
       } else {
         // debugger;
-        roundScore += diceRoll
+        this.roundScore += this.diceRoll
         debugger;
-        roundScoreField[playerNumber].text(roundScore)
-        previousRoll = playerNumber+'/'+diceRoll
+        this.roundScoreField[this.playerNumber] = (this.roundScore)
+        this.previousRoll = this.playerNumber+'/'+this.diceRoll
       }
     },
     holdEm: function() {
@@ -202,6 +232,12 @@ var PigGame = (() => {
   return PigGame;
 })();
 
+$(document).ready(() => {
+  var pg = new PigGame();
+  pg.init();
+});
+
+/***
 // Naive  initialization
 var numPlayers
 var playerNumber
@@ -344,3 +380,4 @@ $(document).ready(function() {
   initVars()
   // alert("document ready")
 })
+**/
