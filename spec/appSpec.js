@@ -1,3 +1,6 @@
+// Global variables for developing tests...
+var diceRoll;
+
 describe('our tools work', () => {
   it('finds the jasmine-jquery library', () => {
     expect('jasmine-jquery').toBeDefined();
@@ -5,6 +8,7 @@ describe('our tools work', () => {
     // expect($('div#commentMe').text()).toContainText('Some comments here!');
   });
 });
+
 describe('gameOver method', function() {
   describe('minimal tests for initializing game', function() {
     it('recognizes the PigGame object', function() {
@@ -74,5 +78,12 @@ describe('test rollEm', () => {
     expect(tg.comment).toHaveBeenCalled();
     expect(tg.comment).toHaveBeenCalledWith('Rolling the dice');
     console.log('test rollEm#2 completed');
+  });
+
+  it('goes to next player after a6 is rolled', () => {
+    var pg = new PigGame();
+    pg.game_active = true;
+    expect(pg.playerNumber).to eql(1)
+    pg.rollEm();
   });
 });

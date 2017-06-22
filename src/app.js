@@ -46,31 +46,66 @@ var PigGame = (function() {
   };
 
   PigGame.prototype = {
-      numPlayers: 2,
-      // playerNumber: 1,
-      players: null,
-      gameActive: false,
-      playerPanelField: null,
-      winningScore: 20,
-      gameScore: [0,0],
-      roundScore: null,
-      gameScoreField: [0,0],
-      roundScoreField: [0,0],
-      diceImage: $('img.dice'),
-      diceRoll: null,
-      previousRoll: null,
-      mainEventFired: null,
-      holdOvar: null,
-      // playerNumber: 1,
+    numPlayers: 2,
+    // playerNumber: 1,
+    players: null,
+    gameActive: false,
+    playerPanelField: null,
+    winningScore: 20,
+    gameScore: [0,0],
+    roundScore: null,
+    gameScoreField: [0,0],
+    roundScoreField: [0,0],
+    diceImage: $('img.dice'),
+    diceRoll: null,
+    previousRoll: null,
+    mainEventFired: null,
+    holdOvar: null,
+    // playerNumber: 1,
 
-      init: function() {
+    init: function() {
       console.log('f(init)');
       var self = this;
 
-      console.log('diceImage = ' + this.diceImage);
+      console.log("value of self or this = " + self.value );
+      console.log('parent of self = ' + self.parentElement);
+      // console.log('parent of self.PigGame  = ' + self.PigGame.parentNode);
+      console.log('parent of PigGame  = ' + PigGame.parentNode);
+      console.log('parent of this.diceRoll  = ' + this.diceRoll);
+      console.log('parent of diceRoll  = ' + diceRoll);
+      console.log('parent of numPlayers  = ' + this.numPlayers.parentElement);
+      console.log('this.diceImage = ' + this.diceImage);
+      console.log('diceImage = ' + diceImage);
+      console.log("compare === " + (diceImage === this.diceImage));
+      console.log("compare == " + (diceImage == this.diceImage));
       console.log('Preparing f(comment)');
       self.comment('Starting new game!')
+      this.initVars();
     },
+
+    initVars: function() {
+      this.comment('Starting new game!')
+      playerNumber = 0
+      players = [0,0]
+      previousRoll = ''
+      gameScore = [0,0]
+      roundScore = 0
+      // TODO: These are mostly constants, so could be initialized only upon load?
+      playerPanelField = [$('.player-0-panel'), $('.player-1-panel')]
+      gameScoreField = [$('#score-0'), $('#score-1')]
+      gameScoreField[0].text('0'); gameScoreField[1].text('0')
+      roundScoreField = [$('#current-0'), $('#current-1')]
+      roundScoreField[0].text(0)
+      roundScoreField[1].text(0)
+      // debugger
+      diceImage = $('img.dice')
+      diceImage.attr('src', '')
+      this.gameActive = true
+      holdOn = false
+      $('div.player-0-panel').removeClass('winner')
+      $('div.player-1-panel').removeClass('winner')
+    },
+
 
     comment: (text) => {
       console.log('f(comment) - ' + text);
@@ -99,7 +134,7 @@ var PigGame = (function() {
 
     newGame: function() {
       // debugger;
-      initVars()
+      this.initVars()
     },
 
     nextPlayer: function() {
@@ -118,8 +153,8 @@ var PigGame = (function() {
         return
       }
       this.comment('Rolling the dice')
-      // var diceRoll = Math.floor(Math.random() * 6) + 1
-      this.diceRoll = 6
+      var diceRoll = Math.floor(Math.random() * 6) + 1
+      // this.diceRoll = 6
       this.comment('Random = ' + this.diceRoll)
       // debugger;
       console.log('this.diceImage = ' + this.diceImage);
@@ -150,15 +185,32 @@ var PigGame = (function() {
         return
       }
       // debugger;
-      comment("Hold em...")
-      updateScore()
-      nextPlayer()
-    },
+      this.comment("Hold em...")
+      this.updateScore()
+      this.nextPlayer()
+    }
   };
   return PigGame;
+
 })();
+
 
 $(document).ready(() => {
   var pg = new PigGame();
   pg.init();
+
+  $("button.btn-new").click(function() {
+    $('#commentMe').text('btn-new clicked');
+    pg.newGame();
+  })
+  $('button.btn-roll').click(function() {
+    console.log('button.btn-roll click handler called');
+    $('#commentMe').text('btn-roll clicked');
+    pg.rollEm();
+  })
+  $('button.btn-hold').click(function() {
+    $('#commentMe').text('btn-hold clicked');
+    pg.holdEm();
+  })
+
 });
