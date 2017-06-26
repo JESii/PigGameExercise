@@ -65,6 +65,7 @@ describe('test holdEm', () => {
 describe('test rollEm', () => {
   it('has a rollEm function', () => {
     var tg = new PigGame();
+    debugger;
     expect(tg.rollEm).toBeDefined();
     console.log('test rollEm#1 completed');
   });
@@ -80,10 +81,10 @@ describe('test rollEm', () => {
     console.log('test rollEm#2 completed');
   });
 
-  it('goes to next player after a6 is rolled', () => {
+  it('goes to next player after a 6 is rolled', () => {
     var pg = new PigGame();
     pg.game_active = true;
-    expect(pg.playerNumber).to eql(1)
+    expect(pg.playerNumber).toBe(1)
     pg.rollEm();
   });
 });
