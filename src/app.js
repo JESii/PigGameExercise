@@ -22,13 +22,15 @@ TODO:
 
 // Simple Module pattern
 // These variaables closed over for the Game module
+var logging = false;
+var comments = false;
 var numPlayers = 2;
 var playerNumber = 1;
 var comment = null;
 var players = null;
 var gameActive = false;
 var playerPanelField = null;
-var winningScore = 20
+// var winningScore = 20
 var gameScore = [0,0];
 var roundScore = null;
 var gameScoreField = [null,null];
@@ -44,7 +46,7 @@ var PigGame = (function() {
   var numPlayers = 2;
   var PigGame = function() {
   // $('button.btn-roll').click(function() {
-  //   console.log('button.btn-roll click handler called');
+  //   this.logIt('button.btn-roll click handler called');
   //   $('#commentMe').text('btn-roll clicked');
   //   this.rollEm();
   // })
@@ -56,7 +58,7 @@ var PigGame = (function() {
     // players: null,
     // gameActive: false,
     // playerPanelField: null,
-    // winningScore: 20,
+    winningScore: 20,
     // gameScore: [0,0],
     // roundScore: null,
     // gameScoreField: [0,0],
@@ -68,10 +70,16 @@ var PigGame = (function() {
     // holdOvar: null,
 
     init: function() {
-      console.log('f(init)');
+      this.logIt('f(init)');
       var self = this;
-      self.comment('Starting new game!')
+      this.comment('Starting new game!')
       this.initVars();
+    },
+
+    logIt: function(log) {
+      if(logging) {
+        console.log(log);
+      }
     },
 
     initVars: function() {
@@ -97,8 +105,9 @@ var PigGame = (function() {
 
 
     comment: (text) => {
-      console.log('f(comment) - ' + text);
-      $('#commentMe').text(text)
+      if(comments) {
+        $('#commentMe').text(text)
+      }
     },
 
     gameScore: function() {
@@ -117,7 +126,7 @@ var PigGame = (function() {
 
     gameOver: function(pNbr) {
       this.comment("Player #" + pNbr + " WON THE GAME!")
-      this.setDiceImage('over');
+      this.setDiceImage('over-'+ pNbr);
       $('.player-' + pNbr + '-panel').addClass('winner')
     },
 
@@ -134,21 +143,26 @@ var PigGame = (function() {
     },
 
     rollEm: function() {
-      console.log('f(rollEm); gameActive = ' + gameActive);
+      this.logIt('f(rollEm); gameActive = ' + gameActive);
       if(!gameActive) {
-        return null
+        this.setDiceImage('start');
+        return null;
       }
       this.comment('Rolling the dice')
-      diceRoll = Math.floor(Math.random() * 6) + 1
+      diceRoll = this.roller();
       this.comment('Random = ' + diceRoll)
       this.setDiceImage(diceRoll);
       this.analyzeRoll(diceRoll);
       return diceRoll
     },
 
+    roller: function() {
+      Math.floor(Math.random() * 6) + 1;
+    },
+
     setDiceImage: function(roll) {
       diceImage.attr('src', 'dice-' + roll + '.png')
-      console.log('diceImage = ' + diceImage.attr('src'));
+      this.logIt('diceImage = ' + diceImage.attr('src'));
     },
 
     analyzeRoll: function(roll) {
@@ -159,7 +173,7 @@ var PigGame = (function() {
       } else if(roll === 6  && previousRoll === playerNumber+'/'+roll) {
         gameActive = false
         this.gameOver((playerNumber + 1) % 2)
-      } else if(gameScore[playerNumber] + roundScore + roll >= winningScore) {
+      } else if(gameScore[playerNumber] + roundScore + roll >= this.winningScore) {
         gameActive = false
         this.gameOver(playerNumber)
       } else {
@@ -198,16 +212,18 @@ $(document).ready(() => {
   pg.init();
 
   $("button.btn-new").click(function() {
-    $('#commentMe').text('btn-new clicked');
+    pg.comment('btn-new clicked');
+    // $('#commentMe').text('btn-new clicked');
     pg.newGame();
   })
   $('button.btn-roll').click(function() {
-    console.log('button.btn-roll click handler called');
-    $('#commentMe').text('btn-roll clicked');
+    // $('#commentMe').text
+    pg.comment('btn-roll clicked');
     pg.rollEm();
   })
   $('button.btn-hold').click(function() {
-    $('#commentMe').text('btn-hold clicked');
+    // $('#commentMe').text
+    pg.comment('btn-hold clicked');
     pg.holdEm();
   })
 

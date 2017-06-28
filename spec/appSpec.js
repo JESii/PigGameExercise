@@ -1,5 +1,5 @@
 // Global variables for developing tests...
-var diceRoll;
+// var diceRoll;
 
 describe('our tools work', () => {
   it('finds the jasmine-jquery library', () => {
@@ -22,7 +22,6 @@ describe('gameOver method', function() {
     it('has a defined "winning Score" of 20', () => {
       var tg = new PigGame();
       tg.init();
-      // debugger;
       expect(tg.winningScore).toEqual(20);
     });
   });
@@ -65,9 +64,13 @@ describe('test holdEm', () => {
 describe('test rollEm', () => {
   it('has a rollEm function', () => {
     var tg = new PigGame();
-    debugger;
     expect(tg.rollEm).toBeDefined();
     console.log('test rollEm#1 completed');
+  });
+
+  it('has a roller function', () => {
+    var tg = new PigGame();
+    expect(tg.roller).toBeDefined();
   });
 
   it('calls comment function when called', () => {
@@ -84,7 +87,10 @@ describe('test rollEm', () => {
   it('goes to next player after a 6 is rolled', () => {
     var pg = new PigGame();
     pg.game_active = true;
-    expect(pg.playerNumber).toBe(1)
+    // expect(pg.playerNumber).toBe(1)
+    let spy = spyOn(pg, 'roller').and.returnValue(1);
+    let spyNext = spyOn(pg, 'nextPlayer');
     pg.rollEm();
+    expect(spyNext).toHaveBeenCalled();
   });
 });
