@@ -10,24 +10,16 @@ CHALLENGE #3
 2) Add input field so that players can set the winning score
 3) Roll two die; players loses his turn if any one of them is a 1
 
-TODO:
-1) Display round score
-2) Display "You won!" over player that won
-
 */
 
-// TODO: Download underscore.js locally
-// var _ = require(['underscore'])
-
-
 // Simple Module pattern
-// These variaables closed over for the Game module
+// These variables closed over for the Game module
+// They could be included in the prototype definitions,
+// but then they all have to be referenced with this...
 var logging = false;
 var comments = false;
 var numPlayers = 2;
 var playerNumber = 1;
-var comment = null;
-var players = null;
 var gameActive = false;
 var playerPanelField = null;
 // var winningScore = 20
@@ -38,24 +30,17 @@ var roundScoreField = [null,null];
 var diceImage = $('img.dice')
 var diceRoll = null;
 var previousRoll = null;
-var mainEventFired = null;
 var holdOn = null;
 var closure = 'this is a test'
 
 var PigGame = (function() {
   var numPlayers = 2;
   var PigGame = function() {
-  // $('button.btn-roll').click(function() {
-  //   this.logIt('button.btn-roll click handler called');
-  //   $('#commentMe').text('btn-roll clicked');
-  //   this.rollEm();
-  // })
   };
 
   PigGame.prototype = {
     // numPlayers: 2,
     // playerNumber: 1,
-    // players: null,
     // gameActive: false,
     // playerPanelField: null,
     winningScore: 20,
@@ -66,8 +51,6 @@ var PigGame = (function() {
     // diceImage: $('img.dice'),
     // diceRoll: null,
     // previousRoll: null,
-    // mainEventFired: null,
-    // holdOvar: null,
 
     init: function() {
       this.logIt('f(init)');
@@ -85,7 +68,6 @@ var PigGame = (function() {
     initVars: function() {
       this.comment('Starting new game!')
       playerNumber = 0
-      players = [0,0]
       previousRoll = ''
       gameScore = [0,0]
       roundScore = 0
@@ -110,6 +92,7 @@ var PigGame = (function() {
       }
     },
 
+    // test function only
     gameScore: function() {
       var gameScore = [0,0]
       return {
@@ -162,7 +145,7 @@ var PigGame = (function() {
 
     setDiceImage: function(roll) {
       diceImage.attr('src', 'dice-' + roll + '.png')
-      this.logIt('diceImage = ' + diceImage.attr('src'));
+      this.logIt('diceImage => ' + roll);
     },
 
     analyzeRoll: function(roll) {
