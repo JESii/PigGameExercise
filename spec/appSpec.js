@@ -5,11 +5,17 @@ describe('our tools work', () => {
   it('finds the jasmine-jquery library', () => {
     expect('jasmine-jquery').toBeDefined();
     expect($('<div><ul></ul><h1>header</h1></div>')).toContainText('header')
-    // expect($('div#commentMe').text()).toContainText('Some comments here!');
+  });
+  it('has jasmine-fixture tool', () => {
+    affix('div.winner');
+    $('div.winner').text('this is my test');
+    expect($('div.winner').text()).toEqual('this is my test');
+    let $input = affix('input#myId[name="winner-value"][value="20"]');
+    expect($input.val()).toEqual('20');
   });
 });
 
-describe('gameOver method', function() {
+describe('start up', function() {
   describe('minimal tests for initializing game', function() {
     it('recognizes the PigGame object', function() {
       var pg = new PigGame();
@@ -80,20 +86,17 @@ describe('test rollEm', () => {
     expect(pg.roller).toBeDefined();
   });
 
-  it('calls comment function when called', () => {
+  it('calls roller function when called', () => {
     var pg = new PigGame();
     pg.init();
-    let spy = spyOn(pg, 'comment').and.callThrough();
+    let spy = spyOn(pg, 'roller').and.callThrough();
     pg.rollEm();
-    expect(pg.comment).toHaveBeenCalled();
-    expect(pg.comment).toHaveBeenCalledWith('Rolling the dice');
+    expect(pg.roller).toHaveBeenCalled();
     console.log('test rollEm#2 completed');
   });
 });
 
 describe('game operation', () => {
-  // this statement never called
-  console.log('test game operation starting');
 
   it('goes to next player after a 1 is rolled', () => {
     var pg = new PigGame();
@@ -153,11 +156,4 @@ describe('game operation', () => {
 });
 
 describe('winning game', () => {
-  it('has jasmine-fixture tool', () => {
-      var pg = new PigGame();
-      pg.init();
-    affix('div.winner#myId');
-    $('div.winner').text('this is my test');
-    expect($('div.winner').text()).toEqual('this is my test');
-  });
 });

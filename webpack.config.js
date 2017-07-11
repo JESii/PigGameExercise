@@ -1,6 +1,15 @@
+const Path = require('path');
+
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
+  template: 'src/index.html',
+  file: 'index.html',
+  inject: 'body'
+  });
+
 module.exports = {
   entry: [
-    './src/index.js'
+    './src/app.js'
   ],
   output: {
     path: __dirname,
@@ -8,20 +17,22 @@ module.exports = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: [{
+    // loaders: [{
+    rules: [{
       exclude: /node_modules/,
-      loader: 'babel',
+      loader: 'babel-loader',
       query: {
-        presets: ['es2015', 'stage-1']
+        presets: ['es2015',  'react']
       }
     }]
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    modules: [__dirname, 'node-modules'],
+    extensions: ['.js', '.jsx']
   },
   devServer: {
     historyApiFallback: true,
     contentBase: './'
-  }
+  },
+  plugins: [HtmlWebpackPluginConfig]
 };
-

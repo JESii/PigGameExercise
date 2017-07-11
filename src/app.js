@@ -1,3 +1,33 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class GetWinningScoreForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.submit = this.submit.bind(this);
+  }
+  submit(e) {
+    const { _score } = this.refs
+    e.preventDefault();
+    alert(`New Winning Score: ${_score.value}`);
+    _score.value = '';
+  }
+  render() {
+    return (
+      <form onSubmit={this.submit}>
+        <input ref="_score"
+          type="text"
+          placeHolder="new score..." required/>
+      </form>
+    )
+  }
+}
+
+ReactDOM.render (  
+  GetWinningScoreForm,
+  document.body
+  );
+
 /*
 GAME RULES:
 - The game has 2 players, playing in rounds
@@ -16,13 +46,12 @@ CHALLENGE #3
 // These variables closed over for the Game module
 // They could be included in the prototype definitions,
 // but then they all have to be referenced with this...
-var logging = false;
-var comments = false;
+var logging = true;
+var comments = true;
 var numPlayers = 2;
 var playerNumber = 1;
 var gameActive = false;
 var playerPanelField = null;
-// var winningScore = 20
 var gameScore = [0,0];
 var roundScore = null;
 var gameScoreField = [null,null];
@@ -30,7 +59,6 @@ var roundScoreField = [null,null];
 var diceImage = $('img.dice')
 var diceRoll = null;
 var previousRoll = null;
-var holdOn = null;
 var closure = 'this is a test'
 
 var PigGame = (function() {
@@ -66,23 +94,23 @@ var PigGame = (function() {
     },
 
     initVars: function() {
-      this.comment('Starting new game!')
-      playerNumber = 0
-      previousRoll = ''
-      gameScore = [0,0]
-      roundScore = 0
+      this.comment('Starting new game!');
+      playerNumber = 0;
+      previousRoll = '';
+      gameScore = [0,0];
+      roundScore = 0;
       // TODO: These are mostly constants, so could be initialized only upon load?
-      playerPanelField = [$('.player-0-panel'), $('.player-1-panel')]
-      gameScoreField = [$('#score-0'), $('#score-1')]
-      roundScoreField = [$('#current-0'), $('#current-1')]
+      playerPanelField = [$('.player-0-panel'), $('.player-1-panel')];
+      gameScoreField = [$('#score-0'), $('#score-1')];
+      roundScoreField = [$('#current-0'), $('#current-1')];
       gameScoreField[0].text('0'); gameScoreField[1].text('0');
       this.clearRoundScore(0); this.clearRoundScore(1);
-      diceImage = $('img.dice')
-      diceImage.attr('src', '')
-      gameActive = true
-      holdOn = false
-      playerPanelField[playerNumber].removeClass('winner')
-      playerPanelField[playerNumber].removeClass('winner')
+      diceImage = $('img.dice');
+      this.setDiceImage('ready');
+      // diceImage.attr('src', 'dice-start')
+      gameActive = true;
+      playerPanelField[playerNumber].removeClass('winner');
+      playerPanelField[playerNumber].removeClass('winner');
     },
 
 
@@ -131,16 +159,16 @@ var PigGame = (function() {
         this.setDiceImage('start');
         return null;
       }
-      this.comment('Rolling the dice')
+      this.logIt('Rolling the dice')
       diceRoll = this.roller();
-      this.comment('Random = ' + diceRoll)
+      this.logIt('Random = ' + diceRoll)
       this.setDiceImage(diceRoll);
       this.analyzeRoll(diceRoll);
       return diceRoll
     },
 
     roller: function() {
-      Math.floor(Math.random() * 6) + 1;
+      return Math.floor(Math.random() * 6) + 1;
     },
 
     setDiceImage: function(roll) {
@@ -158,6 +186,8 @@ var PigGame = (function() {
         this.gameOver((playerNumber + 1) % 2)
       } else if(gameScore[playerNumber] + roundScore + roll >= this.winningScore) {
         gameActive = false
+        // Update roundScore so win is clearly shown
+        roundScoreField[playerNumber].text(roundScore + roll);
         this.gameOver(playerNumber)
       } else {
         roundScore += roll

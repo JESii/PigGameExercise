@@ -1,15 +1,27 @@
 {
   "name": "4-dom-pig-game",
   "version": "1.0.0",
-  "description": "Simple little game",
+  "description": "Simple legacy game with a bit of (React) class",
   "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --port 8070",
+    "build": "babel src -d lib",
+    "dev": "webpack-dev-server --progress --colors",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
+    "babel-loader": "^7.1.1",
+    "html-webpack-plugin": "^2.29.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
     "requirejs": "2.3.3",
     "underscore": "1.8.3"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "babel-cli": "6.24.1",
+    "babel-preset-env": "1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "6.24.1"
   },
   "author": "Jon Seidel <jseidel@edpci.com> (http://www.edpci.com/)",
   "license": "ISC"
