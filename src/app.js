@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 class GetWinningScoreForm extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props) { super(props);
     this.submit = this.submit.bind(this);
   }
   submit(e) {
@@ -24,9 +23,11 @@ class GetWinningScoreForm extends React.Component {
 }
 
 ReactDOM.render (  
-  GetWinningScoreForm,
-  document.body
-  );
+  <div>
+    <GetWinningScoreForm />
+  </div>,
+  document.getElementById('inputForm')
+);
 
 /*
 GAME RULES:

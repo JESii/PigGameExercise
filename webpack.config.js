@@ -1,11 +1,11 @@
 const Path = require('path');
 
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
-  template: 'src/index.html',
-  file: 'index.html',
-  inject: 'body'
-  });
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
+//   template: 'src/index.html',
+//   file: 'index.html',
+//   inject: 'body'
+//   });
 
 module.exports = {
   entry: [
@@ -16,6 +16,7 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js'
   },
+  devtool: 'source-map',
   module: {
     // loaders: [{
     rules: [{
@@ -27,12 +28,12 @@ module.exports = {
     }]
   },
   resolve: {
-    modules: [__dirname, 'node-modules'],
+    modules: [__dirname, 'node_modules'],
     extensions: ['.js', '.jsx']
   },
   devServer: {
     historyApiFallback: true,
     contentBase: './'
-  },
-  plugins: [HtmlWebpackPluginConfig]
+  }
+  // plugins: [HtmlWebpackPluginConfig]
 };
