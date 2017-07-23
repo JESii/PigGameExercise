@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 class GetWinningScoreForm extends React.Component {
   constructor(props) { 
     super(props);
+    // const winningScore = props.winningScore;
     this.submit = this.submit.bind(this);
   }
   submit(e) {
@@ -13,10 +14,13 @@ class GetWinningScoreForm extends React.Component {
     _score.value = '';
   }
   render() {
+    const winningScore = this.props.winningScore;
+    console.log('winningScore : ' + winningScore);
     return (
       <div style={{width: '100%'}}>
         <div style={{float: 'left', width: '30%', textAlign: 'left'}}>
-          Current winning score is: //props.winningScore//
+          Current winning score<br />
+          {winningScore}
         </div>
           <div style={{float: 'right', width: '30%', textAlign: 'right'}}>
             <span> Set Winning Score</span>
@@ -30,13 +34,6 @@ class GetWinningScoreForm extends React.Component {
     )
   }
 }
-
-ReactDOM.render (  
-  <div style={{width: '100%', padding: '20px', margin: 'auto'}}>
-    <GetWinningScoreForm />
-  </div>,
-  document.getElementById('inputForm')
-);
 
 /*
 GAME RULES:
@@ -250,5 +247,12 @@ $(document).ready(() => {
     pg.comment('btn-hold clicked');
     pg.holdEm();
   })
+
+ReactDOM.render (  
+  <div style={{width: '100%', padding: '20px', margin: 'auto'}}>
+    <GetWinningScoreForm winningScore={pg.winningScore} />
+  </div>,
+  document.getElementById('inputForm')
+);
 
 });
