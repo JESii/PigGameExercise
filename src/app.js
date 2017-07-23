@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 class GetWinningScoreForm extends React.Component {
-  constructor(props) { super(props);
+  constructor(props) { 
+    super(props);
     this.submit = this.submit.bind(this);
   }
   submit(e) {
@@ -13,17 +14,25 @@ class GetWinningScoreForm extends React.Component {
   }
   render() {
     return (
-      <form onSubmit={this.submit}>
-        <input ref="_score"
-          type="text"
-          placeHolder="new score..." required/>
-      </form>
+      <div style={{width: '100%'}}>
+        <div style={{float: 'left', width: '30%', textAlign: 'left'}}>
+          Current winning score is: //props.winningScore//
+        </div>
+          <div style={{float: 'right', width: '30%', textAlign: 'right'}}>
+            <span> Set Winning Score</span>
+          <form onSubmit={this.submit}>
+            <input ref="_score"
+              type="text"
+              placeholder="new score..." required/>
+          </form>
+        </div>
+      </div>
     )
   }
 }
 
 ReactDOM.render (  
-  <div>
+  <div style={{width: '100%', padding: '20px', margin: 'auto'}}>
     <GetWinningScoreForm />
   </div>,
   document.getElementById('inputForm')
@@ -47,8 +56,8 @@ CHALLENGE #3
 // These variables closed over for the Game module
 // They could be included in the prototype definitions,
 // but then they all have to be referenced with this...
-var logging = true;
-var comments = true;
+var logging = false;
+var comments = false;
 var numPlayers = 2;
 var playerNumber = 1;
 var gameActive = false;
@@ -216,6 +225,7 @@ var PigGame = (function() {
       this.nextPlayer();
     }
   };
+
   return PigGame;
 
 })();
