@@ -4,32 +4,36 @@ import ReactDOM from 'react-dom';
 class GetWinningScoreForm extends React.Component {
   constructor(props) { 
     super(props);
-    // const winningScore = props.winningScore;
+    this.state = {
+      currentWinningScore: this.props.winningScore
+    };
     this.submit = this.submit.bind(this);
   }
   submit(e) {
     const { _score } = this.refs
     e.preventDefault();
-    alert(`New Winning Score: ${_score.value}`);
+    this.props.onWinningScore(_score.value);
+    this.setState({currentWinningScore: parseInt(_score.value)});
     _score.value = '';
   }
   render() {
-    const winningScore = this.props.winningScore;
-    console.log('winningScore : ' + winningScore);
+    const {currentWinningScore} = this.state;
+    const onWinningScore = this.props.onWinningScore;
+    console.log(`winningScore : ${currentWinningScore}`);
     return (
       <div style={{width: '100%'}}>
         <div style={{float: 'left', width: '30%', textAlign: 'left'}}>
-          Current winning score<br />
-          {winningScore}
+          Winning Score<br />
+          {currentWinningScore}
         </div>
-          <div style={{float: 'right', width: '30%', textAlign: 'right'}}>
-            <span> Set Winning Score</span>
-          <form onSubmit={this.submit}>
-            <input ref="_score"
-              type="text"
-              placeholder="new score..." required/>
-          </form>
-        </div>
+      <div style={{float: 'right', width: '30%', textAlign: 'right'}}>
+        <span> Set Winning Score</span>
+        <form onSubmit={this.submit}>
+          <input ref="_score"
+            type="text"
+            placeholder="new score..." required/>
+        </form>
+      </div>
       </div>
     )
   }
@@ -40,18 +44,20 @@ GAME RULES:
 - The game has 2 players, playing in rounds
 - In each turn, a player rolls a dice as many times as he whishes. Each result get added to his ROUND score
 - BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
+- AND, if a player rolls two sixes in a row, they lose the game
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
-- The first player to reach 100 points on GLOBAL score wins the game
-CHALLENGE #3
-1) Player loses the game for 2 6-s in a row
-2) Add input field so that players can set the winning score
-3) Roll two die; players loses his turn if any one of them is a 1
+- Game starts at 100 points to win the game;
+- Players can change the points required to win the game
+- The first player to reach the winningScore points on GLOBAL score wins the game
+TODO: Additional options / fixes
+- Roll two die; players loses his turn if any one of them is a 1
+- Determine why we get this error "Uncaught TypeError: self.postMessage is not a function" at startup
 
 */
 
 // Simple Module pattern
 // These variables closed over for the Game module
-// They could be included in the prototype definitions,
+// They could/should be included in the prototype definitions, to not pollute the global namespace
 // but then they all have to be referenced with this...
 var logging = false;
 var comments = false;
@@ -74,22 +80,12 @@ var PigGame = (function() {
   };
 
   PigGame.prototype = {
-    // numPlayers: 2,
-    // playerNumber: 1,
-    // gameActive: false,
-    // playerPanelField: null,
-    winningScore: 20,
-    // gameScore: [0,0],
-    // roundScore: null,
-    // gameScoreField: [0,0],
-    // roundScoreField: [0,0],
-    // diceImage: $('img.dice'),
-    // diceRoll: null,
-    // previousRoll: null,
+    winningScore: 100,
+    self: this,
 
     init: function() {
       this.logIt('f(init)');
-      var self = this;
+      self = this;
       this.comment('Starting new game!')
       this.initVars();
     },
@@ -106,7 +102,7 @@ var PigGame = (function() {
       previousRoll = '';
       gameScore = [0,0];
       roundScore = 0;
-      // TODO: These are mostly constants, so could be initialized only upon load?
+      // TODO: These are mostly constants, so could be initialized only upon load
       playerPanelField = [$('.player-0-panel'), $('.player-1-panel')];
       gameScoreField = [$('#score-0'), $('#score-1')];
       roundScoreField = [$('#current-0'), $('#current-1')];
@@ -114,7 +110,6 @@ var PigGame = (function() {
       this.clearRoundScore(0); this.clearRoundScore(1);
       diceImage = $('img.dice');
       this.setDiceImage('ready');
-      // diceImage.attr('src', 'dice-start')
       gameActive = true;
       playerPanelField[playerNumber].removeClass('winner');
       playerPanelField[playerNumber].removeClass('winner');
@@ -220,6 +215,10 @@ var PigGame = (function() {
       this.updateScore(playerNumber, roundScore);
       this.clearRoundScore(playerNumber);
       this.nextPlayer();
+    },
+
+    setWinningScore: function(newWinningScore) {
+      self.winningScore = parseInt(newWinningScore);
     }
   };
 
@@ -248,11 +247,11 @@ $(document).ready(() => {
     pg.holdEm();
   })
 
-ReactDOM.render (  
-  <div style={{width: '100%', padding: '20px', margin: 'auto'}}>
-    <GetWinningScoreForm winningScore={pg.winningScore} />
-  </div>,
-  document.getElementById('inputForm')
-);
+  ReactDOM.render (  
+    <div style={{width: '100%', padding: '20px', margin: 'auto'}}>
+      <GetWinningScoreForm winningScore={pg.winningScore} onWinningScore={pg.setWinningScore}/>
+    </div>,
+    document.getElementById('inputForm')
+  );
 
 });
