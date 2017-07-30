@@ -1,25 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 class GetWinningScoreForm extends React.Component {
   constructor(props) { 
     super(props);
     this.state = {
-      currentWinningScore: this.props.winningScore
+      currentWinningScore: this.props.winningScore,
+      displayErrorMessage: false,
+      errorMessage: "DUMMY"
     };
     this.submit = this.submit.bind(this);
   }
   submit(e) {
     const { _score } = this.refs
     e.preventDefault();
-    this.props.onWinningScore(_score.value);
-    this.setState({currentWinningScore: parseInt(_score.value)});
-    _score.value = '';
-  }
+    if(!isNaN(parseInt(_score.value))) {
+      // Ignore any invalid (NaN) entries
+      this.props.onWinningScore(_score.value);
+      this.setState({currentWinningScore: parseInt(_score.value)});
+      // this.setState({errorMessage: ""});
+    } else {
+      // TODO: Get the error message properly displayed
+      // this.setState({errorMessage: "Only numbers allowed"});
+      // console.log(`errorMessage = ${this.errorMessage}`);
+    }
+      _score.value = '';
+    }
   render() {
     const {currentWinningScore} = this.state;
     const onWinningScore = this.props.onWinningScore;
     console.log(`winningScore : ${currentWinningScore}`);
+    // console.log(`displayErrorMessage : ${displayErrorMessage}`);
+    // console.log(`errorMessage : ${errorMessage}`);
     return (
       <div style={{width: '100%'}}>
         <div style={{float: 'left', width: '30%', textAlign: 'left'}}>
@@ -33,10 +46,18 @@ class GetWinningScoreForm extends React.Component {
             type="text"
             placeholder="new score..." required/>
         </form>
+      <div style={{display: 'inline', textAlign: 'center', color: 'red', fontWeight: 'bold', width: '30%'}}>
+        {this.errorMessage}
+      </div>
       </div>
       </div>
     )
   }
+}
+
+GetWinningScoreForm.propTypes = {
+  winningScore: PropTypes.number.isRequired,
+  currentWinningScore: PropTypes.number
 }
 
 /*
